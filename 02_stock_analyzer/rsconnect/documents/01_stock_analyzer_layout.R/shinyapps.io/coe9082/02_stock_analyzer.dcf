@@ -1,0 +1,12 @@
+name: 02_stock_analyzer
+title: 02_stock_analyzer
+username:
+account: coe9082
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3709450
+bundleId: 4280347
+url: https://coe9082.shinyapps.io/02_stock_analyzer/
+when: 1614480698.81757
+asMultiple: FALSE
+asStatic: FALSE

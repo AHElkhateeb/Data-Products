@@ -1,27 +1,5 @@
-# Business Analytics with Data Science and Machine Learning ----
-# Building Business Data Products ----
-# STOCK ANALYZER APP - DATA ANALYSIS -----
-
-# APPLICATION DESCRIPTION ----
-# - The user will select 1 stock from the SP 500 stock index
-# - The functionality is designed to pull the past 180 days of stock data by default
-# - We will implement 2 moving averages - short (fast) and long (slow)
-# - We will produce a time series visualization
-# - We will produce automated commentary based on the moving averages
-
-# LIBRARIES ----
-library(tidyverse)
-library(lubridate)
-library(fs)
-library(glue)
-
-library(rvest)
-library(quantmod)
-
-library(plotly)
-
-# 1.0 GET STOCK LIST ----
-get_stock_list <- function(stock_index = "DAX") {
+get_stock_list <-
+function(stock_index = "DAX") {
   
   # Control for upper and lower case
   index_lower <- str_to_lower(stock_index)
@@ -67,16 +45,12 @@ get_stock_list <- function(stock_index = "DAX") {
     dplyr::select(label)
   
 }
-
-
-# 2.0 EXTRACT SYMBOL BASED ON USER INPUT ----
-get_symbol_from_user_input <- function(user_input) {
+get_symbol_from_user_input <-
+function(user_input) {
   user_input %>% stringr::str_split(",") %>% purrr::pluck(1,1)
 }
-
-# 3.0 GET STOCK DATA ----
 get_stock_data <-
-  function(stock_symbol, 
+function(stock_symbol, 
            from = today() - days(180), 
            to   = today(), 
            mavg_short = 20, mavg_long = 50) {
@@ -112,10 +86,8 @@ get_stock_data <-
       dplyr::select(date, adjusted, mavg_short, mavg_long, currency)
     
   }
-
-# 4.0 PLOT STOCK DATA ----
 plot_stock_data <-
-  function(stock_data) {
+function(stock_data) {
     
     g <- stock_data %>% 
       
@@ -137,22 +109,19 @@ plot_stock_data <-
           
     ggplotly(g)
   }
-
 currency_format <-
-  function(currency) {
+function(currency) {
     
-    if (currency == "dollar") 
+    if (currency == "USD") 
     { x <- scales::dollar_format(largest_with_cents = 10) }
-    if (currency == "euro")   
+    if (currency == "EUR")   
     { x <- scales::dollar_format(prefix = "", suffix = " ?",
                                  big.mark = ".", decimal.mark = ",",
                                  largest_with_cents = 10)}
     return(x)
   }
-
-# 5.0 GENERATE COMMENTARY ----
 generate_commentary <-
-  function(data, user_input) {
+function(data, user_input) {
     warning_signal <- data %>%
       tail(1) %>% # Get last value
       mutate(mavg_warning_flag = mavg_short < mavg_long) %>% # insert the logical expression
@@ -167,21 +136,3 @@ generate_commentary <-
       str_glue("In reviewing the stock prices of {user_input}, the {n_short}-day moving average is above the {n_long}-day moving average, indicating positive trends")
     }
   }
-
-
-# 6.0 TEST WORKFLOW ----
-
-#"ADS.DE, Adidas" %>% 
-#  get_symbol_from_user_input() %>%
-#  get_stock_data(from = from, to = to ) %>%
-  # plot_stock_data() %>%
-#  generate_commentary(user_input = "ADS.DE, Adidas")
-
-# 7.0 SAVE SCRIPTS ----
-fs::dir_create("00_scripts") #create folder
-
-# write functions to an R file
-dump(
-  list = c("get_stock_list", "get_symbol_from_user_input", "get_stock_data", "plot_stock_data", "currency_format", "generate_commentary"),
-  file = "00_scripts/stock_analysis_functions.R", 
-  append = FALSE) # Override existing 

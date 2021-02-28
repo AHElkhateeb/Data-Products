@@ -1,0 +1,12 @@
+name: sales_dashboard_shiny
+title: sales_dashboard_shiny
+username:
+account: coe9082
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3708793
+bundleId: 4279829
+url: https://coe9082.shinyapps.io/sales_dashboard_shiny/
+when: 1614463539.49954
+asMultiple: FALSE
+asStatic: FALSE
